@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "File To Base64 String";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form id="form0" asp-controller="Home" asp-action="Reverse" method="post" enctype="multipart/form-data" data-val="true">
+            <div class="form-group">
+                <label for="file">File:</label>
+                <input id="file" type="file" name="file" data-val="true" data-val-required="This field is required." />
+                <span class="text-danger field-validation-valid" data-valmsg-replace="true" data-valmsg-for="Text"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </form>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <textarea id="result" class="form-control hidden" rows="20" readonly></textarea>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#form0").submit(function (e) {
+                e.preventDefault();
+                var file = $("#file").get(0).files[0];
+                if (file.size > 50 * 1024 * 1024)
+                    $("#result").val("File size can not more than 50M.").removeClass("hidden");
+                var fd = new FormData();
+                fd.append("file", file);
+                //ajax upload https://stackoverflow.com/questions/2320069/jquery-ajax-file-upload/10811427#24939229
+                $.ajax({
+                    method: $(this).attr("method"),
+                    url: $(this).attr("action"),
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false,  // tell jQuery not to set contentType
+                    data: fd
+                }).done(function (data) {
+                    $("#result").val(data).removeClass("hidden");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $("#result").val(errorThrown).removeClass("hidden");
+                });
+            });
+        });
+    </script>
+}
