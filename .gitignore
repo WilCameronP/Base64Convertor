@@ -302,7 +302,7 @@ __pycache__/
 .vscode/
 
 # Front-end package directory root
-wwwroot/lib/
+Base64Convertor/wwwroot/lib/
 
 # .min files
 *.min.*
