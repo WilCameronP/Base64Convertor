@@ -303,6 +303,3 @@ __pycache__/
 
 # Front-end package directory root
 Base64Convertor/wwwroot/lib/
-
-# .min files
-*.min.*

@@ -12,32 +12,33 @@
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
             <div class="form-group" style="min-height:30px;">
-                <label asp-for="MIMEType"></label>:
+                <label asp-for="FileType"></label>:
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="application/pdf" checked /> application/pdf
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="images/png" /> images/png
+                    <input type="radio" name="FileType" value=".pdf" checked /> .pdf
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="images/jpeg" /> images/jpeg
+                    <input type="radio" name="FileType" value=".png" /> .png
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="images/bmp" /> images/bmp
+                    <input type="radio" name="FileType" value=".jpg" /> .jpg
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="images/gif" /> images/gif
+                    <input type="radio" name="FileType" value=".bmp" /> .bmp
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="text/xml" /> text/xml
-                </label>
-                <label class="radio-inline" title="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                    <input type="radio" name="MIMEType" value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /> .xlsx
+                    <input type="radio" name="FileType" value=".gif" /> .gif
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="MIMEType" value="Other" /> Other
+                    <input type="radio" name="FileType" value=".xml" /> .xml
                 </label>
-                <input type="text" asp-for="OtherMIMEType" class="form-control hidden" style="width: 200px; height: 25px; display: inline; vertical-align:top;" />
+                <label class="radio-inline">
+                    <input type="radio" name="FileType" value=".xlsx" /> .xlsx
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="FileType" value="Other" /> Other
+                </label>
+                <input type="text" asp-for="OtherFileType" class="form-control hidden" style="width: 200px; height: 25px; display: inline; vertical-align:top;" />
+                <span asp-validation-for="OtherFileType" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Generate</button>
         </form>
@@ -47,12 +48,12 @@
     @Html.Partial("_ValidationScriptsPartial")
     <script>
         $(document).ready(function () {
-            var $types = $("input[name='MIMEType']");
+            var $types = $("input[name='FileType']");
             $types.change(function () {
                 if ($types.index($(this)) == ($types.length - 1) && $(this).prop("checked"))
-                    $("#OtherMIMEType").removeClass("hidden");
+                    $("#OtherFileType").removeClass("hidden");
                 else
-                    $("#OtherMIMEType").addClass("hidden");
+                    $("#OtherFileType").addClass("hidden");
             });
         });
     </script>

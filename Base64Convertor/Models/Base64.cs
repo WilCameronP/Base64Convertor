@@ -7,10 +7,10 @@ namespace Base64Convertor.Models
         [Required(ErrorMessage = "This field is required.")]
         public string Text { get; set; }
 
-        [Display(Name = "MIME Type")]
+        [Display(Name = "File Type")]
         [Required(ErrorMessage = "This field is required.")]
-        public string MIMEType { get; set; }
+        public string FileType { get; set; }
 
-        public string OtherMIMEType { get; set; }
+        public string OtherFileType { get; set; }
     }
 }
