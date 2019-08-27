@@ -8,6 +8,7 @@ using Base64Convertor.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Base64Convertor.Controllers
 {
@@ -20,21 +21,39 @@ namespace Base64Convertor.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index([FromServices]IContentTypeProvider contentTypeProvider, Base64 model)
+        public IActionResult Index([FromServices]IContentTypeProvider contentTypeProvider, [FromServices]IMemoryCache memoryCache, Base64 model)
         {
             if (ModelState.IsValid)
             {
+                model.Text = model.Text.Replace('-', '+');
+                model.Text = model.Text.Replace('_', '/');
+                model.Text = model.Text.Replace('=', '/');
+                model.Text = model.Text.Replace(':', '/');
+                model.Text = model.Text.Replace("\\", "");
                 byte[] bytes = Convert.FromBase64String(model.Text);
                 string fileExtension = model.FileType == "Other" ? model.OtherFileType : model.FileType;
                 if (contentTypeProvider.TryGetContentType(fileExtension, out string mime))
                 {
-                    string fileName = Guid.NewGuid().ToString("N") + fileExtension;                    
+                    string fileName = Guid.NewGuid().ToString("N") + fileExtension;
+
+                    memoryCache.Set(fileName, new FileCache { Contents = bytes, Mime = mime, Name = fileName }, TimeSpan.FromMinutes(11));
+
                     HttpContext.Response.Headers.Add("Content-Disposition", "inline; filename=" + fileName); // https://stackoverflow.com/questions/19411335/make-a-file-open-in-browser-instead-of-downloading-it
                     return File(bytes, mime);
                 }
                 throw new Exception($"File type {fileExtension} is not supported.");
             }
             return View();
+        }
+
+        public IActionResult File([FromServices]IContentTypeProvider contentTypeProvider, [FromServices]IMemoryCache memoryCache, string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id) && memoryCache.TryGetValue<FileCache>(id, out var item))
+            {
+                HttpContext.Response.Headers.Add("Content-Disposition", "inline; filename=" + item.Name); // https://stackoverflow.com/questions/19411335/make-a-file-open-in-browser-instead-of-downloading-it
+                return File(item.Contents, item.Mime);
+            }
+            return Redirect(nameof(Index));
         }
         #endregion
 

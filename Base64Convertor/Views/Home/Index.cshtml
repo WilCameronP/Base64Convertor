@@ -45,7 +45,7 @@
     </div>
 </div>
 @section Scripts{
-    @Html.Partial("_ValidationScriptsPartial")
+    @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
         $(document).ready(function () {
             var $types = $("input[name='FileType']");
