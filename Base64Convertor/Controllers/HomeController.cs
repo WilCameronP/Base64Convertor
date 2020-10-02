@@ -9,6 +9,8 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net;
+using System.Text;
 
 namespace Base64Convertor.Controllers
 {
@@ -48,6 +50,8 @@ namespace Base64Convertor.Controllers
 
         public IActionResult File([FromServices]IContentTypeProvider contentTypeProvider, [FromServices]IMemoryCache memoryCache, string id)
         {
+            //Zebra.Sdk.Comm.
+            //Neodynamic.SDK.ZPLPrinter.ZPLPrinter
             if (!string.IsNullOrWhiteSpace(id) && memoryCache.TryGetValue<FileCache>(id, out var item))
             {
                 HttpContext.Response.Headers.Add("Content-Disposition", "inline; filename=" + item.Name); // https://stackoverflow.com/questions/19411335/make-a-file-open-in-browser-instead-of-downloading-it
@@ -81,6 +85,36 @@ namespace Base64Convertor.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private void Larray()
+        {
+            byte[] zpl = Encoding.UTF8.GetBytes("^xa^cfa,50^fo100,100^fdHello World^fs^xz");
+            
+            // adjust print density (8dpmm), label width (4 inches), label height (6 inches), and label index (0) as necessary
+            var request = (HttpWebRequest)WebRequest.Create("http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/");
+            request.Method = "POST";
+            request.Accept = "application/pdf"; // omit this line to get PNG images back
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = zpl.Length;
+
+            var requestStream = request.GetRequestStream();
+            requestStream.Write(zpl, 0, zpl.Length);
+            requestStream.Close();
+
+            try
+            {
+                var response = (HttpWebResponse)request.GetResponse();
+                var responseStream = response.GetResponseStream();
+                var fileStream = System.IO.File.Create("label.pdf"); // change file name for PNG images
+                responseStream.CopyTo(fileStream);
+                responseStream.Close();
+                fileStream.Close();
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine("Error: {0}", e.Status);
+            }
         }
     }
 }
