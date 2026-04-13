@@ -11,10 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddJsonLocalization(this IServiceCollection services)
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
             services.AddOptions();
 
@@ -25,15 +22,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddJsonLocalization(this IServiceCollection services, Action<JsonLocalizationOptions> setupAction)
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
-            if (setupAction == null)
-            {
-                throw new ArgumentNullException(nameof(setupAction));
-            }
+            ArgumentNullException.ThrowIfNull(setupAction);
 
             AddJsonLocalizationServices(services, setupAction);
 
@@ -44,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
             services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
-            services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer));
+            services.TryAddTransient<IStringLocalizer, StringLocalizer>();
         }
 
         internal static void AddJsonLocalizationServices(

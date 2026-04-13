@@ -18,10 +18,7 @@ namespace Base64Convertor.Localization.Json
             IOptions<JsonLocalizationOptions> localizationOptions,
             ILoggerFactory loggerFactory)
         {
-            if (localizationOptions == null)
-            {
-                throw new ArgumentNullException(nameof(localizationOptions));
-            }
+            ArgumentNullException.ThrowIfNull(localizationOptions);
 
             _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? string.Empty;
             _resourcesType = localizationOptions.Value.ResourcesType;
@@ -30,10 +27,7 @@ namespace Base64Convertor.Localization.Json
 
         public IStringLocalizer Create(Type resourceSource)
         {
-            if (resourceSource == null)
-            {
-                throw new ArgumentNullException(nameof(resourceSource));
-            }
+            ArgumentNullException.ThrowIfNull(resourceSource);
 
             var typeInfo = resourceSource.GetTypeInfo();
             var assembly = typeInfo.Assembly;
@@ -44,15 +38,8 @@ namespace Base64Convertor.Localization.Json
 
         public IStringLocalizer Create(string baseName, string location)
         {
-            if (baseName == null)
-            {
-                throw new ArgumentNullException(nameof(baseName));
-            }
-
-            if (location == null)
-            {
-                throw new ArgumentNullException(nameof(location));
-            }
+            ArgumentNullException.ThrowIfNull(baseName);
+            ArgumentNullException.ThrowIfNull(location);
 
             var assemblyName = new AssemblyName(location);
             var assembly = Assembly.Load(assemblyName);
@@ -96,7 +83,7 @@ namespace Base64Convertor.Localization.Json
         {
             if (name.StartsWith(prefix, StringComparison.Ordinal))
             {
-                return name.Substring(prefix.Length);
+                return name[prefix.Length..];
             }
 
             return name;

@@ -9,7 +9,7 @@ namespace Base64Convertor.Localization.Json.Internal
         // http://codebuckets.com/2017/10/19/getting-the-root-directory-path-for-net-core-applications/
         public static string GetApplicationRoot()
         {
-            var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+            var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
             var appRoot = appPathMatcher.Match(exePath).Value;
 

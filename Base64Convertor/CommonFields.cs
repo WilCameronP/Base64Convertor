@@ -13,7 +13,7 @@ namespace Base64Convertor
         {
             var ass = Assembly.GetExecutingAssembly();
             AppVersion = ass.GetName().Version.ToString(3);
-            AppRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+            AppRootPath = Path.GetDirectoryName(ass.Location);
 #if DEBUG 
             var appPathMatcher = new System.Text.RegularExpressions.Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
             AppRootPath = appPathMatcher.Match(AppRootPath).Value;

@@ -42,10 +42,7 @@ namespace Base64Convertor.Localization.Json
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
 
                 var value = GetStringSafely(name);
 
@@ -57,10 +54,7 @@ namespace Base64Convertor.Localization.Json
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
 
                 var format = GetStringSafely(name);
                 var value = string.Format(format ?? name, arguments);
@@ -76,10 +70,7 @@ namespace Base64Convertor.Localization.Json
 
         protected IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures, CultureInfo culture)
         {
-            if (culture == null)
-            {
-                throw new ArgumentNullException(nameof(culture));
-            }
+            ArgumentNullException.ThrowIfNull(culture);
 
             var resourceNames = includeParentCultures
                 ? GetAllStringsFromCultureHierarchy(culture)
@@ -94,10 +85,7 @@ namespace Base64Convertor.Localization.Json
 
         protected string GetStringSafely(string name)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+            ArgumentNullException.ThrowIfNull(name);
 
             var culture = CultureInfo.CurrentUICulture;
             string value = null;
